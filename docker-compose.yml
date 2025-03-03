@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  scraper:
+    build: .
+    container_name: kelio-scraper
+    environment:
+      - SCRAPER_ENV=production
+      - RESEND_API_KEY=${RESEND_API_KEY}
+      - EMAIL_SENDER=${EMAIL_SENDER}
+      - APP_DEBUG=${APP_DEBUG:-false}
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - PYTHONPATH=/app
+    volumes:
+      - ./data:/app/data
+      - ./src:/app/src:ro
+      - ./logs:/app/logs
+      - ./.env:/app/.env:ro
+    restart: unless-stopped
+    working_dir: /app
+    command: ["sh", "-c", "while true; do python src/core/scraper.py; sleep 3600; done"]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import os; os.path.exists('/app/data/jobs.csv')"]
+      interval: 1h
+      timeout: 10s
+      retries: 3
+    networks:
+      - scraper-network
+
+  web:
+    build: .
+    container_name: kelio-web
+    ports:
+      - "5000:5000"
+    environment:
+      - SCRAPER_ENV=production
+      - APP_DEBUG=${APP_DEBUG:-false}
+      - PYTHONPATH=/app
+    volumes:
+      - ./data:/app/data
+      - ./src:/app/src
+      - ./logs:/app/logs
+      - ./.env:/app/.env:ro
+    restart: unless-stopped
+    working_dir: /app
+    command: python src/app.py
+    networks:
+      - scraper-network
+    depends_on:
+      - scraper
+
+networks:
+  scraper-network:
+    driver: bridge
