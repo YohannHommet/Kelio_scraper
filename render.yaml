@@ -1,0 +1,22 @@
+services:
+  # Web frontend service
+  - type: web
+    name: kelio-web
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python src/core/app.py
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: true
+    plan: free
+
+  # Background worker for scraper
+  - type: worker
+    name: kelio-scraper
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python src/core/scraper.py
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: true
+    plan: free
