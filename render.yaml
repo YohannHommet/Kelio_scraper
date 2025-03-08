@@ -1,22 +1,19 @@
 services:
-  # Web frontend service
+  # Web service with integrated scraper functionality
   - type: web
-    name: kelio-web
+    name: kelio-app
     env: python
     buildCommand: pip install -r requirements.txt
-    startCommand: python src/core/app.py
+    startCommand: python src/app.py
     envVars:
       - key: PYTHONUNBUFFERED
         value: true
+      - key: PYTHONPATH
+        value: /app
+      - key: SCRAPER_ENV
+        value: production
     plan: free
-
-  # Background worker for scraper
-  - type: worker
-    name: kelio-scraper
-    env: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: python src/core/scraper.py
-    envVars:
-      - key: PYTHONUNBUFFERED
-        value: true
-    plan: free
+    disk:
+      name: data
+      mountPath: /app/data
+      sizeGB: 1

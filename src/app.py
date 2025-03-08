@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Web interface for displaying scraped job listings.
+Web interface for displaying scraped job listings and running the scraper.
 """
 
 from flask import Flask, render_template, redirect, url_for, flash, jsonify
@@ -36,6 +36,14 @@ def index():
     jobs_list = jobs.to_dict('records')
     
     return render_template('index.html', jobs=jobs_list, now=datetime.now())
+
+@app.route('/health')
+def health():
+    """Health check endpoint for monitoring."""
+    return jsonify({
+        'status': 'healthy',
+        'timestamp': datetime.now().isoformat()
+    })
 
 @app.route('/run-scraper', methods=['POST'])
 def run_scraper():

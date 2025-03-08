@@ -8,11 +8,14 @@
   <a href="https://www.selenium.dev/">
     <img src="https://img.shields.io/badge/Selenium-43B02A?style=for-the-badge&logo=selenium&logoColor=white" alt="Selenium">
   </a>
+  <a href="https://flask.palletsprojects.com/">
+    <img src="https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white" alt="Flask">
+  </a>
 </div>
 
 # Scraper d'offres d'emploi Kelio
 
-Ce projet est un scraper simple et efficace conçu pour extraire les offres d'emploi liées au développement web de la société Kelio. Il utilise des bibliothèques Python telles que `requests`, `BeautifulSoup`, et `Selenium` pour récupérer et analyser les données.
+Ce projet est une application web Flask intégrant un scraper conçu pour extraire les offres d'emploi liées au développement web de la société Kelio. Il utilise des bibliothèques Python telles que `requests`, `BeautifulSoup`, et `Selenium` pour récupérer et analyser les données, et Flask pour présenter les résultats via une interface web.
 
 ## Table des matières
 
@@ -22,7 +25,7 @@ Ce projet est un scraper simple et efficace conçu pour extraire les offres d'em
 - [Configuration](#configuration)
 - [Utilisation](#utilisation)
 - [Interface Web](#interface-web)
-- [Automatisation](#automatisation)
+- [Déploiement](#déploiement)
 - [Contributions](#contributions)
 - [License](#license)
 
@@ -132,46 +135,46 @@ L'interface affiche toutes les offres d'emploi stockées dans le fichier CSV sou
 
 ## Déploiement
 
-Plusieurs options gratuites sont disponibles pour déployer ce projet :
+### Déploiement local avec Docker
 
-### Option 1 : Render (Recommandé)
+Pour déployer l'application localement avec Docker, suivez ces étapes :
 
-1. Créez un compte sur [Render](https://render.com)
-2. Connectez votre dépôt GitHub
-3. Deployer en utilisant le fichier `render.yaml` inclus :
-   - Un service web pour l'interface
-   - Un service worker pour le scraper
-
-### Option 2 : Railway
-
-1. Créez un compte sur [Railway](https://railway.app)
-2. Connectez votre dépôt GitHub
-3. Configurez les variables d'environnement
-4. Utilisez le fichier `docker-compose.yml` pour déployer les deux services
-
-### Option 3 : PythonAnywhere
-
-1. Créez un compte sur [PythonAnywhere](https://www.pythonanywhere.com)
-2. Uploadez votre code
-3. Configurez une application web Flask
-4. Créez une tâche planifiée pour le scraper
-
-Pour chaque option, assurez-vous de configurer les variables d'environnement nécessaires selon votre fichier `.env`.
-
-
-## Automatisation
-
-Pour automatiser l'exécution du scraper, vous pouvez utiliser `cron` sur Linux/Mac :
-
-1. Ouvrez le crontab :
+1. Construisez l'image Docker :
 ```bash
-crontab -e
+docker build -t kelio-app .
 ```
 
-2. Ajoutez la ligne suivante pour exécuter le scraper toutes les 6 heures :
+2. Démarrez le conteneur Docker :
 ```bash
-0 */6 * * * /usr/bin/python3 /path/to/scraper.py
+docker run -d -p 5000:5000 --name kelio-app kelio-app
 ```
+
+Ou utilisez Docker Compose :
+```bash
+docker-compose up -d
+```
+
+### Déploiement sur Render
+
+L'application est configurée pour être facilement déployée sur [Render](https://render.com) :
+
+1. Créez un compte sur Render si vous n'en avez pas déjà un.
+
+2. Connectez votre dépôt GitHub à Render.
+
+3. Créez un nouveau service Web et sélectionnez votre dépôt.
+
+4. Render détectera automatiquement le fichier `render.yaml` et configurera le service.
+
+5. Configurez les variables d'environnement nécessaires dans l'interface Render :
+   - `RESEND_API_KEY` (si vous utilisez les notifications par email)
+   - `EMAIL_SENDER` (adresse email d'expédition)
+   - `FLASK_SECRET_KEY` (clé secrète pour Flask)
+   - `APP_DEBUG` (true/false)
+
+6. Déployez l'application.
+
+Le service déployé sur Render exécutera l'application Flask qui permet d'afficher les offres d'emploi et d'exécuter le scraper à la demande via l'interface web.
 
 ## Contributions
 

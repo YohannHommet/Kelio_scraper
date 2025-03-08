@@ -67,21 +67,22 @@
   <!-- Stats Section -->
   <div class="container">
     <div class="row justify-content-center">
-      <div class="col-md-8">
-        <div class="stats-card">
-          <div class="row align-items-center">
-            <div class="col-md-6 text-center">
-              <div class="stats-number">{{ jobs|length }}</div>
-              <div class="stats-label">Offres disponibles</div>
-            </div>
-            <div class="col-md-6 text-center">
-              <div class="last-update">
-                <i class="fas fa-clock me-2"></i>
-                <span>Dernière mise à jour :</span>
-                <span class="last-update-time">{{ now.strftime('%d/%m/%Y à %H:%M') }}</span>
-              </div>
-            </div>
+      <div class="col-md-5 col-lg-4">
+        <div class="stats-card text-center d-flex flex-column justify-content-center">
+          <div class="stats-icon mb-2">
+            <i class="fas fa-briefcase"></i>
           </div>
+          <div class="stats-number">{{ jobs|length }}</div>
+          <div class="stats-label">Offres disponibles</div>
+        </div>
+      </div>
+      <div class="col-md-5 col-lg-4">
+        <div class="stats-card text-center d-flex flex-column justify-content-center">
+          <div class="stats-icon mb-2">
+            <i class="fas fa-clock"></i>
+          </div>
+          <div class="stats-number">{{ now.strftime('%d/%m/%Y') }}</div>
+          <div class="stats-label">Dernière mise à jour à {{ now.strftime('%H:%M') }}</div>
         </div>
       </div>
     </div>
